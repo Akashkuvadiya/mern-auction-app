@@ -312,7 +312,7 @@ const WinningBids = () => {
                                 Your Winning Bid
                               </span>
                               <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                                ₹{auction.currentBid}
+                                $ {auction.currentBid}
                               </span>
                             </div>
                             <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700">

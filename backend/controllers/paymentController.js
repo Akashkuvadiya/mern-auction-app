@@ -6,13 +6,20 @@ import { User } from "../models/userSchema.js";
 import { Auction } from "../models/auctionSchema.js";
 import Withdrawal from "../models/withdrawalSchema.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import {
+  paymentSuccessEmail,
+  auctioneerPaymentEmail,
+  adminPaymentEmail,
+  withdrawalRequestEmail,
+  withdrawalStatusEmail,
+} from "../utils/emailTemplates.js";
 
 // Initialize Razorpay with error handling
 let razorpayInstance;
 try {
     // Make sure we have valid API keys
-    const key_id = process.env.RAZORPAY_KEY_ID || "rzp_test_V2MzNlwp6aNoif";
-    const key_secret = process.env.RAZORPAY_KEY_SECRET || "yWv46G33aCzUTPLHDOFRWYT5";
+    const key_id = process.env.RAZORPAY_KEY_ID || "rzp_test_us_SKdQRPcEgu0Rvd";
+    const key_secret = process.env.RAZORPAY_KEY_SECRET || "uV4RbmbbB8y9z4Ak3KtbTfBN";
     
     if (!key_id || !key_secret) {
         throw new Error("Missing Razorpay API keys");
@@ -66,11 +73,12 @@ export const createPaymentLink = asyncHandler(async (req, res) => {
     const auctioneerId = auction.createdBy._id;
     const amount = auction.finalBidAmount;
     const razorpayAmount = Math.round(amount * 100); // Convert to paise and round
-    
+    //const razorpayAmount = Math.round(amount); // for USD, no need to multiply by 100
+
     // Create razorpay order
     const options = {
         amount: razorpayAmount,
-        currency: "INR",
+        currency: "USD",
         receipt: `receipt_${auctionId}_${Date.now()}`,
         payment_capture: 1,
     };
@@ -102,7 +110,7 @@ Congratulations on winning the auction for ${auction.itemName}!
 Please complete your payment using the link below:
 ${paymentLink}
 
-Amount to pay: ₹${amount}
+Amount to pay: $ ${amount}
 Order ID: ${order.id}
 
 This payment link will be valid for 48 hours.
@@ -158,10 +166,10 @@ export const getPaymentInfo = asyncHandler(async (req, res) => {
         res.status(200).json({
             success: true,
             transaction,
-            razorpayKeyId: process.env.RAZORPAY_KEY_ID || "rzp_test_V2MzNlwp6aNoif",
+            razorpayKeyId: process.env.RAZORPAY_KEY_ID || "rzp_test_us_SKdQRPcEgu0Rvd",
             orderId: transaction.paymentReference,
             amount: transaction.amount,
-            currency: "INR",
+            currency: "USD",
             name: itemName,
             description: `Payment for auction item: ${itemName}`,
             image: imageUrl,
@@ -205,7 +213,12 @@ export const verifyPayment = asyncHandler(async (req, res) => {
         }
         
         // Verify signature
-        const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "yWv46G33aCzUTPLHDOFRWYT5");
+        //const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "uV4RbmbbB8y9z4Ak3KtbTfBN");
+        console.log("ORDER ID:", razorpay_order_id);
+console.log("PAYMENT ID:", razorpay_payment_id);
+console.log("SIGNATURE:", razorpay_signature);
+console.log("SECRET BEING USED:", process.env.RAZORPAY_KEY_SECRET);
+        const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "uV4RbmbbB8y9z4Ak3KtbTfBN");
         hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
         const generatedSignature = hmac.digest("hex");
         
@@ -281,12 +294,12 @@ export const verifyPayment = asyncHandler(async (req, res) => {
         const bidderEmailSubject = "Payment Successful - Auction Item Purchase";
         const bidderEmailMessage = `Dear ${bidder.userName},
 
-Your payment of ₹${transaction.amount} for the auction item "${auction.title}" has been successfully processed.
+Your payment of $ ${transaction.amount} for the auction item "${auction.title}" has been successfully processed.
 
 Transaction Details:
 - Payment ID: ${razorpay_payment_id}
 - Order ID: ${razorpay_order_id}
-- Amount: ₹${transaction.amount}
+- Amount: $ ${transaction.amount}
 
 Thank you for your purchase!
 Auction Team`;
@@ -294,7 +307,14 @@ Auction Team`;
         await sendEmail({
             email: bidder.email,
             subject: bidderEmailSubject,
-            message: bidderEmailMessage
+            message: bidderEmailMessage,
+            html: paymentSuccessEmail({
+                bidderName: bidder.userName,
+                auctionTitle: auction.title,
+                amount: transaction.amount,
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+            }),
         });
 
         // Email to Auctioneer
@@ -306,10 +326,10 @@ Good news! The payment for your auctioned item "${auction.title}" has been succe
 
 Transaction Details:
 - Auction Item: ${auction.title}
-- Selling Price: ₹${transaction.amount}
-- Commission (${commissionRate * 100}%): ₹${commissionAmount}
-- Amount Credited to Your Wallet: ₹${netAmount}
-- Current Wallet Balance: ₹${auctioneer.wallet.balance}
+- Selling Price: $ ${transaction.amount}
+- Commission (${commissionRate * 100}%): $ ${commissionAmount}
+- Amount Credited to Your Wallet: $ ${netAmount}
+- Current Wallet Balance: $ ${auctioneer.wallet.balance}
 
 You can withdraw this amount at any time from your wallet.
 
@@ -319,7 +339,16 @@ Auction Team`;
             await sendEmail({
                 email: auctioneer.email,
                 subject: auctioneerEmailSubject,
-                message: auctioneerEmailMessage
+                message: auctioneerEmailMessage,
+                html: auctioneerPaymentEmail({
+                    auctioneerName: auctioneer.userName,
+                    auctionTitle: auction.title,
+                    amount: transaction.amount,
+                    commissionRate,
+                    commissionAmount,
+                    netAmount,
+                    walletBalance: auctioneer.wallet.balance,
+                }),
             });
         }
         
@@ -334,9 +363,9 @@ Transaction Details:
 - Auction: ${auction.title}
 - Bidder: ${bidder.userName} (${bidder.email})
 - Auctioneer: ${auctioneer?.userName} (${auctioneer?.email})
-- Total Amount: ₹${transaction.amount}
-- Commission (${commissionRate * 100}%): ₹${commissionAmount}
-- Amount Credited to Auctioneer: ₹${netAmount}
+- Total Amount: $ ${transaction.amount}
+- Commission (${commissionRate * 100}%): $ ${commissionAmount}
+- Amount Credited to Auctioneer: $ s${netAmount}
 - Payment ID: ${razorpay_payment_id}
 
 The funds have been automatically settled to the auctioneer's wallet.
@@ -347,7 +376,19 @@ Auction System`;
                 await sendEmail({
                     email: admin.email,
                     subject: adminEmailSubject,
-                    message: adminEmailMessage
+                    message: adminEmailMessage,
+                    html: adminPaymentEmail({
+                        auctionTitle: auction.title,
+                        bidderName: bidder.userName,
+                        bidderEmail: bidder.email,
+                        auctioneerName: auctioneer?.userName,
+                        auctioneerEmail: auctioneer?.email,
+                        amount: transaction.amount,
+                        commissionRate,
+                        commissionAmount,
+                        netAmount,
+                        paymentId: razorpay_payment_id,
+                    }),
                 });
             }
         }
@@ -423,10 +464,10 @@ Great news! The payment for your auctioned item "${transaction.auction.itemName}
 
 Transaction Details:
 - Auction Item: ${transaction.auction.itemName}
-- Winning Bid: ₹${transaction.amount}
-- Commission (${commissionRate * 100}%): ₹${commissionAmount}
-- Net Amount Credited: ₹${netAmount}
-- Current Wallet Balance: ₹${auctioneer.wallet.balance}
+- Winning Bid: $ ${transaction.amount}
+- Commission (${commissionRate * 100}%): $ ${commissionAmount}
+- Net Amount Credited: $ ${netAmount}
+- Current Wallet Balance: $ ${auctioneer.wallet.balance}
 
 You can withdraw this amount to your bank account from your wallet dashboard.
 
@@ -436,7 +477,16 @@ Auction Team`;
     await sendEmail({
         email: auctioneer.email,
         subject: auctioneerEmailSubject,
-        message: auctioneerEmailMessage
+        message: auctioneerEmailMessage,
+        html: auctioneerPaymentEmail({
+            auctioneerName: auctioneer.userName,
+            auctionTitle: transaction.auction.itemName,
+            amount: transaction.amount,
+            commissionRate,
+            commissionAmount,
+            netAmount,
+            walletBalance: auctioneer.wallet.balance,
+        }),
     });
     
     res.status(200).json({
@@ -475,7 +525,7 @@ export const withdrawFunds = asyncHandler(async (req, res) => {
     
     if (user.wallet.balance < amount) {
         res.status(400);
-        throw new Error(`Insufficient wallet balance. Available: ₹${user.wallet.balance}`);
+        throw new Error(`Insufficient wallet balance. Available: $ ${user.wallet.balance}`);
     }
     
     let transferDetails = {};
@@ -533,12 +583,12 @@ export const withdrawFunds = asyncHandler(async (req, res) => {
     const adminEmails = await User.find({ role: "Super Admin" }).select('email');
     
     if (adminEmails.length > 0) {
-        const adminEmailSubject = `New Withdrawal Request: ₹${amount}`;
+        const adminEmailSubject = `New Withdrawal Request: $ ${amount}`;
         const adminEmailMessage = `A new withdrawal request has been received.
 
 Withdrawal Details:
 - User: ${user.userName} (${user.email})
-- Amount: ₹${amount}
+- Amount: $ ${amount}
 - Transfer Method: ${transferMethod}
 - Request ID: ${withdrawal._id}
 
@@ -550,7 +600,14 @@ Auction System`;
             await sendEmail({
                 email: admin.email,
                 subject: adminEmailSubject,
-                message: adminEmailMessage
+                message: adminEmailMessage,
+                html: withdrawalRequestEmail({
+                    userName: user.userName,
+                    userEmail: user.email,
+                    amount,
+                    transferMethod,
+                    withdrawalId: withdrawal._id,
+                }),
             });
         }
     }
@@ -610,11 +667,11 @@ export const processWithdrawal = asyncHandler(async (req, res) => {
     let emailMessage = `Dear ${user.userName},\n\n`;
     
     if (status === "Completed") {
-        emailMessage += `Your withdrawal request for ₹${withdrawal.amount} has been processed successfully and the funds have been transferred to your ${withdrawal.transferMethod === "BankTransfer" ? "bank account" : withdrawal.transferMethod === "RazorpayTransfer" ? "Razorpay account" : "PayPal account"}.`;
+        emailMessage += `Your withdrawal request for $ ${withdrawal.amount} has been processed successfully and the funds have been transferred to your ${withdrawal.transferMethod === "BankTransfer" ? "bank account" : withdrawal.transferMethod === "RazorpayTransfer" ? "Razorpay account" : "PayPal account"}.`;
     } else if (status === "Failed") {
-        emailMessage += `Your withdrawal request for ₹${withdrawal.amount} could not be processed and has been canceled. The funds have been returned to your wallet.`;
+        emailMessage += `Your withdrawal request for $ ${withdrawal.amount} could not be processed and has been canceled. The funds have been returned to your wallet.`;
     } else {
-        emailMessage += `Your withdrawal request for ₹${withdrawal.amount} is now ${status.toLowerCase()}.`;
+        emailMessage += `Your withdrawal request for $ ${withdrawal.amount} is now ${status.toLowerCase()}.`;
     }
     
     if (remarks) {
@@ -626,7 +683,14 @@ export const processWithdrawal = asyncHandler(async (req, res) => {
     await sendEmail({
         email: user.email,
         subject: emailSubject,
-        message: emailMessage
+        message: emailMessage,
+        html: withdrawalStatusEmail({
+            userName: user.userName,
+            amount: withdrawal.amount,
+            status,
+            transferMethod: withdrawal.transferMethod,
+            remarks,
+        }),
     });
     
     res.status(200).json({
@@ -794,6 +858,7 @@ export const createAuctionPayment = asyncHandler(async (req, res) => {
         }
         
         const razorpayAmount = Math.round(amount * 100); // Convert to paise
+        //const razorpayAmount = Math.round(amount); // for USD, no need to multiply by 100
         
         // Create a shorter receipt ID (max 40 chars as per Razorpay requirement)
         const shortAuctionId = auctionId.toString().substring(0, 10);
@@ -802,7 +867,7 @@ export const createAuctionPayment = asyncHandler(async (req, res) => {
         
         const orderOptions = {
             amount: razorpayAmount,
-            currency: "INR",
+            currency: "USD",
             receipt: receipt,
             payment_capture: 1
         };

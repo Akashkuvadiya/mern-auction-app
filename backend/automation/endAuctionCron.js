@@ -1,9 +1,12 @@
+import { auctionWonEmail } from "../utils/emailTemplates.js";
 import cron from "node-cron";
 import { Auction } from "../models/auctionSchema.js";
 import { User } from "../models/userSchema.js";
 import { Bid } from "../models/bidSchema.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import { calculateCommission } from "../controllers/commissionController.js";
+//import { auctionWonEmail } from "../utils/emailTemplates.js";
+
 
 export const endedAuctionCron = () => {
   cron.schedule("*/1 * * * *", async () => {
@@ -116,10 +119,24 @@ Thank you for participating!
 Best regards,
 Auction Team`;
 
+            // console.log("SENDING EMAIL TO WINNING BIDDER");
+            // try {
+            //   await sendEmail({ email: bidder.email, subject, message });
+            //   console.log("SUCCESSFULLY SENT EMAIL TO WINNING BIDDER");
             console.log("SENDING EMAIL TO WINNING BIDDER");
-            try {
-              await sendEmail({ email: bidder.email, subject, message });
-              console.log("SUCCESSFULLY SENT EMAIL TO WINNING BIDDER");
+              try {
+                await sendEmail({
+                  email: bidder.email,
+                  subject,
+                  message,
+                  html: auctionWonEmail({
+                    bidderName: bidder.userName,
+                    auctionTitle: auction.title,
+                    auctioneer,
+                    formattedDueDate,
+                  }),
+                });
+                console.log("SUCCESSFULLY SENT EMAIL TO WINNING BIDDER");
             } catch (emailError) {
               console.error(`Failed to send email notification: ${emailError.message}`);
               // Continue processing the auction even if email fails

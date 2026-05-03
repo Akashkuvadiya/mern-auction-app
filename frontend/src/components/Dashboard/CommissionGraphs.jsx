@@ -425,7 +425,7 @@ const CommissionGraphs = () => {
     ),
     datasets: [
       {
-        label: "Transaction Volume (₹)",
+        label: "Transaction Volume ($)",
         data: monthlyDataFromDashboard.map((item) => item.volume),
         backgroundColor: "rgba(99, 102, 241, 0.8)",
         hoverBackgroundColor: "rgba(79, 70, 229, 1)",
@@ -434,7 +434,7 @@ const CommissionGraphs = () => {
         barPercentage: 0.6,
       },
       {
-        label: "Commission (₹)",
+        label: "Commission ($)",
         data: monthlyDataFromDashboard.map((item) => item.commission),
         backgroundColor: "rgba(236, 72, 153, 0.8)",
         hoverBackgroundColor: "rgba(219, 39, 119, 1)",
@@ -482,7 +482,7 @@ const CommissionGraphs = () => {
         callbacks: {
           label: function (context) {
             const label = context.dataset.label || "";
-            return `${label}: ₹${context.parsed.y.toLocaleString()}`;
+            return `${label}: $ ${context.parsed.y.toLocaleString()}`;
           },
         },
       },
@@ -517,7 +517,7 @@ const CommissionGraphs = () => {
           color: isDarkMode ? "#9CA3AF" : "#6B7280",
           padding: 10,
           callback: function (value) {
-            return "₹" + value.toLocaleString();
+            return "$" + value.toLocaleString();
           },
         },
       },
@@ -557,7 +557,7 @@ const CommissionGraphs = () => {
               Total Commission
             </h3>
             <p className="text-xl font-bold text-gray-800 dark:text-gray-100">
-              ₹{stats.commission.totalCommission.toLocaleString()}
+              ${stats.commission.totalCommission.toLocaleString()}
             </p>
           </div>
         </div>
@@ -581,7 +581,7 @@ const CommissionGraphs = () => {
               Total Transaction Volume
             </h3>
             <p className="text-xl font-bold text-gray-800 dark:text-gray-100">
-              ₹{stats.dashboard.transactionStats.totalVolume.toLocaleString()}
+              ${stats.dashboard.transactionStats.totalVolume.toLocaleString()}
             </p>
           </div>
         </div>

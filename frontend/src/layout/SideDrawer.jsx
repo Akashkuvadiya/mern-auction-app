@@ -56,7 +56,7 @@ const SideDrawer = () => {
       {isAuthenticated && user && user.role === "Auctioneer" && (
         <div className="fixed right-5 lg:right-8 top-5 z-10 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300 dark:from-indigo-700 dark:via-indigo-600 dark:to-indigo-500 text-white py-2 px-4 rounded-xl shadow-lg flex items-center gap-2 font-medium">
           <FaWallet className="text-white text-lg" />
-          <span>₹{user.wallet?.balance || 0}</span>
+          <span>$ {user.wallet?.balance || 0}</span>
         </div>
       )}
       

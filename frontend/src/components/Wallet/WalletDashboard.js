@@ -120,7 +120,7 @@ const WalletDashboard = () => {
     }
 
     if (parseFloat(withdrawAmount) > walletData.balance) {
-      setWithdrawError(`Insufficient funds. Your available balance is ₹${walletData.balance.toLocaleString()}`);
+      setWithdrawError(`Insufficient funds. Your available balance is $ ${walletData.balance.toLocaleString()}`);
       return;
     }
 
@@ -206,7 +206,7 @@ const WalletDashboard = () => {
             </Box>
             
             <Typography variant="h3" component="div" sx={{ fontWeight: 'bold', mb: 2 }}>
-              ₹{walletData?.balance?.toLocaleString() || '0'}
+              $ {walletData?.balance?.toLocaleString() || '0'}
             </Typography>
             
             <Button 
@@ -238,7 +238,7 @@ const WalletDashboard = () => {
                   <ArrowDownward sx={{ color: 'success.main', mb: 1 }} />
                   <Typography variant="body2" color="text.secondary">Total Received</Typography>
                   <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1 }}>
-                    ₹{walletData?.transactions?.reduce((sum, t) => sum + t.amount, 0)?.toLocaleString() || '0'}
+                    $ {walletData?.transactions?.reduce((sum, t) => sum + t.amount, 0)?.toLocaleString() || '0'}
                   </Typography>
                 </Box>
               </Grid>
@@ -248,7 +248,7 @@ const WalletDashboard = () => {
                   <ArrowUpward sx={{ color: 'error.main', mb: 1 }} />
                   <Typography variant="body2" color="text.secondary">Total Withdrawn</Typography>
                   <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1 }}>
-                    ₹{walletData?.completedWithdrawals?.reduce((sum, w) => sum + (w.status === 'Completed' ? w.amount : 0), 0)?.toLocaleString() || '0'}
+                    $ {walletData?.completedWithdrawals?.reduce((sum, w) => sum + (w.status === 'Completed' ? w.amount : 0), 0)?.toLocaleString() || '0'}
                   </Typography>
                 </Box>
               </Grid>
@@ -258,7 +258,7 @@ const WalletDashboard = () => {
                   <AccountBalance sx={{ color: 'warning.main', mb: 1 }} />
                   <Typography variant="body2" color="text.secondary">Pending Withdrawals</Typography>
                   <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1 }}>
-                    ₹{walletData?.pendingWithdrawals?.reduce((sum, w) => sum + w.amount, 0)?.toLocaleString() || '0'}
+                    $ {walletData?.pendingWithdrawals?.reduce((sum, w) => sum + w.amount, 0)?.toLocaleString() || '0'}
                   </Typography>
                 </Box>
               </Grid>
@@ -304,9 +304,9 @@ const WalletDashboard = () => {
                               {new Date(transaction.createdAt).toLocaleDateString()}
                             </TableCell>
                             <TableCell>{transaction.auction?.itemName || 'Unknown Item'}</TableCell>
-                            <TableCell>₹{transaction.amount.toLocaleString()}</TableCell>
-                            <TableCell>₹{(transaction.commission?.amount || 0).toLocaleString()}</TableCell>
-                            <TableCell>₹{netAmount.toLocaleString()}</TableCell>
+                            <TableCell>$ {transaction.amount.toLocaleString()}</TableCell>
+                            <TableCell>$ {(transaction.commission?.amount || 0).toLocaleString()}</TableCell>
+                            <TableCell>$ {netAmount.toLocaleString()}</TableCell>
                             <TableCell>
                               <Chip 
                                 label={transaction.status} 
@@ -348,7 +348,7 @@ const WalletDashboard = () => {
                             <TableCell>
                               {new Date(withdrawal.updatedAt).toLocaleDateString()}
                             </TableCell>
-                            <TableCell>₹{withdrawal.amount.toLocaleString()}</TableCell>
+                            <TableCell>$ {withdrawal.amount.toLocaleString()}</TableCell>
                             <TableCell>{withdrawal.transferMethod}</TableCell>
                             <TableCell>
                               <Chip 
@@ -392,7 +392,7 @@ const WalletDashboard = () => {
                             <TableCell>
                               {new Date(withdrawal.createdAt).toLocaleDateString()}
                             </TableCell>
-                            <TableCell>₹{withdrawal.amount.toLocaleString()}</TableCell>
+                            <TableCell>$ {withdrawal.amount.toLocaleString()}</TableCell>
                             <TableCell>{withdrawal.transferMethod}</TableCell>
                             <TableCell>
                               <Chip 
@@ -434,7 +434,7 @@ const WalletDashboard = () => {
           ) : (
             <>
               <Typography variant="body1" paragraph sx={{ mt: 1 }}>
-                Available Balance: <strong>₹{walletData?.balance?.toLocaleString() || '0'}</strong>
+                Available Balance: <strong>$ {walletData?.balance?.toLocaleString() || '0'}</strong>
               </Typography>
               
               <TextField
@@ -448,7 +448,7 @@ const WalletDashboard = () => {
                 error={!!withdrawError}
                 helperText={withdrawError}
                 InputProps={{
-                  startAdornment: <Typography sx={{ mr: 1 }}>₹</Typography>,
+                  startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>,
                 }}
                 variant="outlined"
                 sx={{ mb: 3 }}

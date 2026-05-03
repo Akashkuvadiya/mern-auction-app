@@ -109,7 +109,7 @@ const FeaturedAuctions = () => {
                         </span>
                         <span className="text-green-600">
                           {" "}
-                          ₹{auction.startingBid}
+                          $ {auction.startingBid}
                         </span>
                       </p>
                       <p>
@@ -140,7 +140,7 @@ const FeaturedAuctions = () => {
                       </span>
                       <span className="text-green-600">
                         {" "}
-                        ₹{auction.startingBid}
+                        $ {auction.startingBid}
                       </span>
                     </p>
                     <p>

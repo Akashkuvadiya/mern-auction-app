@@ -94,7 +94,7 @@ const Leaderboard = () => {
                   {user.userName}
                 </td>
                 <td className="py-2 px-4 text-green-600 dark:text-green-400 font-semibold">
-                  ₹{user.moneySpent.toLocaleString()}
+                  $ {user.moneySpent.toLocaleString()}
                 </td>
                 <td className="py-2 px-4 text-blue-600 dark:text-blue-400 font-semibold">
                   {user.auctionWon}

@@ -62,6 +62,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("Failed to upload profile image to Cloudinary.", 500));
         }
 
+
         const user = await User.create({
             userName,
             password,
@@ -91,9 +92,11 @@ export const register = catchAsyncErrors(async (req, res, next) => {
 
 
     } catch (error) {
+         console.error("REAL ERROR:", error);
         return next(new ErrorHandler("Failed to upload profile image to Cloudinary.", 500));
     }
 });
+
 
 export const login = catchAsyncErrors(async (req, res, next) => {
     const { email, password } = req.body;
@@ -138,6 +141,7 @@ export const getProfile = catchAsyncErrors(async (req, res, next) => {
 export const logout = catchAsyncErrors(async (req, res, next) => {
     res.status(200).cookie("token", "", {
         expires: new Date(Date.now()),
+        // expires: new Date(0),
         httpOnly: true
     }).json({
         success: true,

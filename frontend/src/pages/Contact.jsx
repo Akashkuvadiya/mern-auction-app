@@ -38,10 +38,10 @@ const Contact = () => {
 
     emailjs
       .send(
-        "service_cv1zq2e",
-        "template_1jcp25m",
+        "service_9ey13ee",
+        "template_q1dq1ih",
         templateParams,
-        "i5uplgffVYU6NrwXw"
+        "1-yFCNLoyI5ythYIQ"
       )
       .then(() => {
         toast.success("Thank You! Your message has been sent successfully.", {
@@ -80,7 +80,7 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <Phone className="mr-3 text-xl" />
-                  <span>+91 98765 43210</span>
+                  <span>(732)-713-0546</span>
                 </div>
                 <div className="flex items-center">
                   <Mail className="mr-3 text-xl" />

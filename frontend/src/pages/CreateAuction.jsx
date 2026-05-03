@@ -276,11 +276,18 @@ const CustomDatePicker = ({
                   onChange={(e) => handleTimeChange("minutes", e.target.value)}
                   className="p-1 rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200"
                 >
-                  {[...Array(4)].map((_, i) => (
+                  {/* {[...Array(4)].map((_, i) => (
                     <option key={i * 15} value={i * 15}>
                       {(i * 15).toString().padStart(2, "0")}
                     </option>
-                  ))}
+                  ))} */
+                    [...Array(60)].map((_, i) => (
+                    <option key={i} value={i}>
+                      {i.toString().padStart(2, "0")}
+                    </option>
+                  ))
+                  }
+
                 </select>
                 <select
                   value={time.ampm}

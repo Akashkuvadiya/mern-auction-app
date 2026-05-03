@@ -50,7 +50,7 @@ export const updateProofStatus = catchAsyncErrors(async (req, res, next) => {
   }
   let proof = await PaymentProof.findById(id);
   if (!proof) {
-    return next(new ErrorHandler("Payment proof  not found.", 400));
+    return next(new ErrorHandler("Payment proof not found.", 400));
   }
   proof = await PaymentProof.findByIdAndUpdate(
     id,
@@ -171,7 +171,7 @@ export const updateUserWalletBalance = catchAsyncErrors(
       success: true,
       message: `User wallet balance ${
         action === "add" ? "increased" : "decreased"
-      } by ₹${amount}`,
+      } by $ ${amount}`,
       currentBalance: user.wallet.balance,
       user: {
         _id: user._id,

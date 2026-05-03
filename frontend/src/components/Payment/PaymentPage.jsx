@@ -394,7 +394,7 @@ const PaymentPage = () => {
 
     const options = {
       key: paymentInfo.razorpayKeyId,
-      amount: paymentInfo.amount * 100, // Amount in paise
+      amount: paymentInfo.amount, // Amount in paise  * 100
       currency: paymentInfo.currency,
       name: "Auction System",
       description: paymentInfo.description,
@@ -422,6 +422,11 @@ const PaymentPage = () => {
     };
 
     const razorpayInstance = new window.Razorpay(options);
+    console.log("RAZORPAY OPTIONS:", {
+  key: paymentInfo.razorpayKeyId,
+  order_id: paymentInfo.orderId,
+  amount: paymentInfo.amount * 100,
+});
     razorpayInstance.open();
   };
 
@@ -544,7 +549,7 @@ const PaymentPage = () => {
                       Total Amount
                     </span>
                     <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                      ₹{transaction?.amount?.toLocaleString() || 0}
+                      $ {transaction?.amount?.toLocaleString() || 0}
                     </span>
                   </div>
                 </div>
@@ -575,7 +580,7 @@ const PaymentPage = () => {
                       Item Price
                     </span>
                     <span className="font-medium text-gray-800 dark:text-gray-200">
-                      ₹{transaction?.amount?.toLocaleString() || 0}
+                      $ {transaction?.amount?.toLocaleString() || 0}
                     </span>
                   </div>
 
@@ -584,7 +589,7 @@ const PaymentPage = () => {
                       Platform Fee
                     </span>
                     <span className="font-medium text-gray-800 dark:text-gray-200">
-                      ₹0
+                      $ 0
                     </span>
                   </div>
 
@@ -593,7 +598,7 @@ const PaymentPage = () => {
                       Tax
                     </span>
                     <span className="font-medium text-gray-800 dark:text-gray-200">
-                      ₹0
+                      $ 0
                     </span>
                   </div>
                 </div>
@@ -605,7 +610,7 @@ const PaymentPage = () => {
                     Total
                   </span>
                   <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                    ₹{transaction?.amount?.toLocaleString() || 0}
+                    $ {transaction?.amount?.toLocaleString() || 0}
                   </span>
                 </div>
 
@@ -623,7 +628,7 @@ const PaymentPage = () => {
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center"
                   >
                     <CreditCard className="mr-2" />
-                    Pay Now ₹{transaction?.amount?.toLocaleString() || 0}
+                    Pay Now $ {transaction?.amount?.toLocaleString() || 0}
                   </button>
 
                   <button

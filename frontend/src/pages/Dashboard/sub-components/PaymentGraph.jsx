@@ -125,7 +125,7 @@ const PaymentGraph = () => {
               label += ': ';
             }
             if (context.parsed.y !== null) {
-              label += `₹${context.parsed.y.toLocaleString()}`;
+              label += `$ ${context.parsed.y.toLocaleString()}`;
             }
             return label;
           }
@@ -166,7 +166,7 @@ const PaymentGraph = () => {
             : "#6B7280",
           padding: 10,
           callback: function (value) {
-            return "₹" + value.toLocaleString();
+            return "$" + value.toLocaleString();
           },
         },
       },
@@ -213,10 +213,10 @@ const PaymentGraph = () => {
               Total Transaction Value
             </p>
             <p className="text-3xl font-bold text-amber-500">
-              ₹{totalYearlyTransactions.toLocaleString()}
+              $ {totalYearlyTransactions.toLocaleString()}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Avg Monthly: ₹{(totalYearlyTransactions / 12).toLocaleString(undefined, {maximumFractionDigits: 0})}
+              Avg Monthly: ${(totalYearlyTransactions / 12).toLocaleString(undefined, {maximumFractionDigits: 0})}
             </p>
           </div>
           <div className="pl-4">
@@ -224,10 +224,10 @@ const PaymentGraph = () => {
               Total Payment Proof Value
             </p>
             <p className="text-3xl font-bold text-indigo-500">
-              ₹{totalYearlyPaymentProofs.toLocaleString()}
+              $ {totalYearlyPaymentProofs.toLocaleString()}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Avg Monthly: ₹{(totalYearlyPaymentProofs / 12).toLocaleString(undefined, {maximumFractionDigits: 0})}
+              Avg Monthly: $ {(totalYearlyPaymentProofs / 12).toLocaleString(undefined, {maximumFractionDigits: 0})}
             </p>
           </div>
         </div>

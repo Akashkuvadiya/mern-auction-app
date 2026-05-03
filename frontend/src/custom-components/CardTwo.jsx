@@ -560,7 +560,7 @@ const CardTwo = ({ imgSrc, title, startingBid, startTime, endTime, id }) => {
                     Starting Bid
                   </span>
                   <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    ₹{startingBid}
+                    $ {startingBid}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">

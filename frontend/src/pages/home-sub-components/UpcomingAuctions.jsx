@@ -210,7 +210,7 @@ const UpcomingAuctions = () => {
                   Recently Ended
                 </p>
                 <p className="text-center text-sm text-orange-500 dark:text-orange-300 mt-2">
-                  Final Price: ₹{auction.currentBid || auction.startingBid}
+                  Final Price: $ {auction.currentBid || auction.startingBid}
                 </p>
               </div>
             ) : (
@@ -222,7 +222,7 @@ const UpcomingAuctions = () => {
                       Starting Bid:
                     </span>
                     <span className="text-green-600 font-bold">
-                      ₹{auction.startingBid}
+                      $ {auction.startingBid}
                     </span>
                   </div>
                 </div>

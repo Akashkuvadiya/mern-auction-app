@@ -151,7 +151,7 @@ const Auctions = () => {
                                   Current Bid
                                 </span>
                                 <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                                  ₹{auction.startingBid}
+                                  $ {auction.startingBid}
                                 </span>
                               </div>
                               <div className="flex justify-between items-center">
@@ -181,7 +181,7 @@ const Auctions = () => {
                                   Starting Bid
                                 </span>
                                 <span className="text-xl font-bold text-green-600 dark:text-green-400">
-                                  ₹{auction.startingBid}
+                                  $ {auction.startingBid}
                                 </span>
                               </div>
                               <div className="flex justify-between items-center">

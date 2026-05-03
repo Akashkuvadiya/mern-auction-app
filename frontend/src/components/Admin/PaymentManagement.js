@@ -260,7 +260,7 @@ const PaymentManagement = () => {
                     <Typography variant="h6">Amount Processed</Typography>
                   </Box>
                   <Typography variant="h4">
-                    ₹{transactions.reduce((sum, t) => sum + (t.status === 'Settled' ? t.amount : 0), 0).toLocaleString()}
+                    ${transactions.reduce((sum, t) => sum + (t.status === 'Settled' ? t.amount : 0), 0).toLocaleString()}
                   </Typography>
                 </CardContent>
               </Card>
@@ -350,7 +350,7 @@ const PaymentManagement = () => {
                             <TableCell>{transaction.auction?.itemName || '—'}</TableCell>
                             <TableCell>{transaction.bidder?.userName || '—'}</TableCell>
                             <TableCell>{transaction.auctioneer?.userName || '—'}</TableCell>
-                            <TableCell>₹{transaction.amount.toLocaleString()}</TableCell>
+                            <TableCell>${transaction.amount.toLocaleString()}</TableCell>
                             <TableCell>{getStatusChip(transaction.status)}</TableCell>
                             <TableCell>
                               <Tooltip title="View Details">
@@ -422,7 +422,7 @@ const PaymentManagement = () => {
                               {new Date(withdrawal.createdAt).toLocaleDateString()}
                             </TableCell>
                             <TableCell>{withdrawal.user?.userName || '—'}</TableCell>
-                            <TableCell>₹{withdrawal.amount.toLocaleString()}</TableCell>
+                            <TableCell>${withdrawal.amount.toLocaleString()}</TableCell>
                             <TableCell>{withdrawal.transferMethod}</TableCell>
                             <TableCell>{getStatusChip(withdrawal.status)}</TableCell>
                             <TableCell>
@@ -491,7 +491,7 @@ const PaymentManagement = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">Amount</Typography>
-                  <Typography variant="body1" gutterBottom>₹{selectedTransaction.amount.toLocaleString()}</Typography>
+                  <Typography variant="body1" gutterBottom>${selectedTransaction.amount.toLocaleString()}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">Auction Item</Typography>
@@ -518,7 +518,7 @@ const PaymentManagement = () => {
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">Commission Amount</Typography>
                   <Typography variant="body1" gutterBottom>
-                    ₹{((selectedTransaction.commission?.amount) || (selectedTransaction.amount * 0.05)).toLocaleString()}
+                    ${((selectedTransaction.commission?.amount) || (selectedTransaction.amount * 0.05)).toLocaleString()}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -586,7 +586,7 @@ const PaymentManagement = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">Amount</Typography>
-                  <Typography variant="body1" gutterBottom>₹{selectedWithdrawal.amount.toLocaleString()}</Typography>
+                  <Typography variant="body1" gutterBottom>${selectedWithdrawal.amount.toLocaleString()}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">User</Typography>

@@ -150,7 +150,7 @@ const ViewAuctionDetails = () => {
                         Starting Bid:{" "}
                       </span>
                       <span className="text-green-600 dark:text-green-300 font-semibold">
-                        ₹{auctionDetail.startingBid}
+                        $ {auctionDetail.startingBid}
                       </span>
                     </p>
                   </div>
@@ -184,7 +184,7 @@ const ViewAuctionDetails = () => {
                   <h2 className="text-2xl font-bold text-white">Bidders</h2>
                   {isAuctionActive && (
                     <span className="text-xl font-semibold text-white">
-                      Current Bid : ₹{auctionDetail.currentBid}
+                      Current Bid : $ {auctionDetail.currentBid}
                     </span>
                   )}
                 </div>
@@ -225,7 +225,7 @@ const ViewAuctionDetails = () => {
                                     {bidder.userName}
                                   </span>
                                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                                    Bid Amount: ₹{bidder.amount}
+                                    Bid Amount: $ {bidder.amount}
                                   </span>
                                 </div>
                               </div>

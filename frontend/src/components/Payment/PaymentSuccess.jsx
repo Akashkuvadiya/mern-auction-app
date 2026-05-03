@@ -112,7 +112,7 @@ const PaymentSuccess = () => {
           
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="body1" color="text.secondary">Amount Paid:</Typography>
-            <Typography variant="body1">₹{paymentDetails?.amount?.toLocaleString() || '-'}</Typography>
+            <Typography variant="body1">${paymentDetails?.amount?.toLocaleString() || '-'}</Typography>
           </Box>
           
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>

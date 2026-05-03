@@ -237,19 +237,19 @@ const SignUp = () => {
                             value="ICICI Bank"
                             className="bg-gray-100 dark:bg-gray-700"
                           >
-                            ICICI Bank
+                            Wells Fargo Bank
                           </option>
                           <option
                             value="HDFC Bank"
                             className="bg-gray-100 dark:bg-gray-700"
                           >
-                            HDFC Bank
+                            Bank of America
                           </option>
                           <option
                             value="Axis Bank"
                             className="bg-gray-100 dark:bg-gray-700"
                           >
-                            Axis Bank
+                            Chase Bank
                           </option>
                         </select>
                         <input
