@@ -396,7 +396,7 @@ const PaymentPage = () => {
       key: paymentInfo.razorpayKeyId,
       amount: paymentInfo.amount, // Amount in paise  * 100
       currency: paymentInfo.currency,
-      name: "Auction System",
+      name: "PrimeBid",
       description: paymentInfo.description,
       image: paymentInfo.image,
       order_id: paymentInfo.orderId,

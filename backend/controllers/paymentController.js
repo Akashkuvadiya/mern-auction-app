@@ -72,8 +72,8 @@ export const createPaymentLink = asyncHandler(async (req, res) => {
     const bidderId = auction.winner._id;
     const auctioneerId = auction.createdBy._id;
     const amount = auction.finalBidAmount;
-    const razorpayAmount = Math.round(amount * 100); // Convert to paise and round
-    //const razorpayAmount = Math.round(amount); // for USD, no need to multiply by 100
+    //const razorpayAmount = Math.round(amount * 100); // Convert to paise and round
+    const razorpayAmount = Math.round(amount); // for USD, no need to multiply by 100
 
     // Create razorpay order
     const options = {
@@ -215,9 +215,9 @@ export const verifyPayment = asyncHandler(async (req, res) => {
         // Verify signature
         //const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "uV4RbmbbB8y9z4Ak3KtbTfBN");
         console.log("ORDER ID:", razorpay_order_id);
-console.log("PAYMENT ID:", razorpay_payment_id);
-console.log("SIGNATURE:", razorpay_signature);
-console.log("SECRET BEING USED:", process.env.RAZORPAY_KEY_SECRET);
+        console.log("PAYMENT ID:", razorpay_payment_id);
+        console.log("SIGNATURE:", razorpay_signature);
+        console.log("SECRET BEING USED:", process.env.RAZORPAY_KEY_SECRET);
         const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "uV4RbmbbB8y9z4Ak3KtbTfBN");
         hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
         const generatedSignature = hmac.digest("hex");
@@ -365,7 +365,7 @@ Transaction Details:
 - Auctioneer: ${auctioneer?.userName} (${auctioneer?.email})
 - Total Amount: $ ${transaction.amount}
 - Commission (${commissionRate * 100}%): $ ${commissionAmount}
-- Amount Credited to Auctioneer: $ s${netAmount}
+- Amount Credited to Auctioneer: $ ${netAmount}
 - Payment ID: ${razorpay_payment_id}
 
 The funds have been automatically settled to the auctioneer's wallet.
@@ -857,8 +857,8 @@ export const createAuctionPayment = asyncHandler(async (req, res) => {
             throw new Error("Invalid bid amount for payment");
         }
         
-        const razorpayAmount = Math.round(amount * 100); // Convert to paise
-        //const razorpayAmount = Math.round(amount); // for USD, no need to multiply by 100
+        //const razorpayAmount = Math.round(amount * 100); // Convert to paise
+        const razorpayAmount = Math.round(amount); // for USD, no need to multiply by 100
         
         // Create a shorter receipt ID (max 40 chars as per Razorpay requirement)
         const shortAuctionId = auctionId.toString().substring(0, 10);
